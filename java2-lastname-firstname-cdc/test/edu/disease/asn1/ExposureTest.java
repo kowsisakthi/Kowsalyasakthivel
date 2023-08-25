@@ -1,61 +1,196 @@
 package edu.disease.asn1;
-import static org.junit.Assert.*;
-import org.junit.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class ExposureTest {
+import org.junit.jupiter.api.Test;
 
-    @Test
-    public void testExposureConstructorAndGetters() {
-        LocalDateTime dateTime = LocalDateTime.of(2023, 8, 19, 10, 0);
-        String exposureType = "D";
+class ExposureTest {
+	@Test
+	void testcon() {
+		Exposure e=new Exposure(UUID.randomUUID());
+		assertTrue(e instanceof Exposure);
+	}
+	@Test
+	void testHashCode() {
+		UUID patient= UUID.randomUUID();
+		Exposure e=new Exposure(patient);
+		int result =31*patient.hashCode();
+		
+		assertTrue(result==e.hashCode());
+	}
+	@Test
+	void testHashCode1() {
+		UUID patient= null;
+		Exposure e=new Exposure(patient);
+		//int result =31*patient.hashCode();
+		
+		assertTrue(0==e.hashCode());
+	}
+	@Test
+	void testHashCode2() {
+		UUID patient= null;
+		Exposure e=new Exposure(patient);
+		LocalDateTime d= LocalDateTime.now();
+		e.setDateTime(d);
+		int result =31*d.hashCode();
+		
+		assertTrue(result==e.hashCode());
+	}
 
-        Exposure exposure = new Exposure(dateTime, exposureType);
 
-        assertEquals(dateTime, exposure.getDateTime());
-        assertEquals(exposureType, exposure.getExposureType());
-    }
 
-    @Test
-    public void testSetExposureTypeValid() {
-        Exposure exposure = new Exposure();
-        exposure.setExposureType("D");
 
-        assertEquals("D", exposure.getExposureType());
-    }
+	@Test
+	void testGetPatientld() {
+		UUID patient= UUID.randomUUID();
+		Exposure e=new Exposure(patient);
+		assertEquals(patient, e.getPatientld());
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetExposureTypeInvalid() {
-        Exposure exposure = new Exposure();
-        exposure.setExposureType("InvalidType");
-    }
+	@Test
+	void testGetDateTime() {
+		LocalDateTime d= LocalDateTime.now();
+		UUID patient= UUID.randomUUID();
+		Exposure e=new Exposure(patient);
+		e.setDateTime(d);
+		assertEquals(d, e.getDateTime());
+		
+	}
 
-    @Test
-    public void testEqualsAndHashCode() {
-        UUID patientId = UUID.randomUUID();
-        LocalDateTime dateTime = LocalDateTime.of(2023, 8, 19, 10, 0);
-        String exposureType = "D";
+	
 
-        Exposure exposure1 = new Exposure(dateTime, exposureType);
-        exposure1.patientId = patientId;
+	@Test
+	void testSetExposureType() {
+		UUID patient= UUID.randomUUID();
+		Exposure e=new Exposure(patient);
+		e.setExposureType("D");
+		assertEquals("D", e.getExposureType());
+	}
+	@Test
+	void testSetExposureType1() {
+		UUID patient= UUID.randomUUID();
+		Exposure e=new Exposure(patient);
+		e.setExposureType("I");
+		assertEquals("I", e.getExposureType());
+	}
+	@Test
+	void testSetExposureType3() {
+		UUID patient= UUID.randomUUID();
+		Exposure e=new Exposure(patient);
+		 assertThrows(IllegalArgumentException.class, ()->e.setExposureType("kowsi"));
+		
+	}
+	
 
-        Exposure exposure2 = new Exposure(dateTime, exposureType);
-        exposure2.patientId = patientId;
+	@Test
+	void testEqualsObject() {
+		UUID patient= UUID.randomUUID();
+		Exposure e1=new Exposure(patient);
+		Exposure e2=new Exposure(patient);
+		assertTrue(e1.equals(e2));
+		
+	}
+	@Test
+	void testEqualsObject1() {
+		UUID patient= UUID.randomUUID();
+		Exposure e1=new Exposure(patient);
+		Exposure e2=e1;
+		assertTrue(e1.equals(e2));
+		
+	}
 
-        assertEquals(exposure1, exposure2);
-        assertEquals(exposure1.hashCode(), exposure2.hashCode());
-    }
+	@Test
+	void testEqualsObject3() {
+		UUID patient= UUID.randomUUID();
+		Exposure e1=new Exposure(patient);
+		Exposure e2=null;
+		assertFalse(e1.equals(e2));
+		
+	}
+	@Test
+	void testEqualsObject4() {
+		UUID patient= UUID.randomUUID();
+		Exposure e1=new Exposure(patient);
+		assertFalse(e1.equals("kowsi"));
+		
+	}
+	@Test
+	void testEqualsObject5() {
+		LocalDateTime d= LocalDateTime.now();
+		UUID patient= UUID.randomUUID();
+		Exposure e1=new Exposure(patient);
+		e1.setDateTime(d);
+		Exposure e2=new Exposure(patient);
+		assertFalse(e1.equals(e2));
+		
+	}
+	@Test
+	void testEqualsObject6() {
+		LocalDateTime d= LocalDateTime.now();
+		UUID patient= UUID.randomUUID();
+		Exposure e1=new Exposure(patient);
+		e1.setDateTime(d);
+		Exposure e2=new Exposure(patient);
+		assertFalse(e2.equals(e1));
+		
+	}
+	@Test
+	void testEqualsObject7() {
+		LocalDateTime d= LocalDateTime.now();
+		UUID patient= UUID.randomUUID();
+		Exposure e1=new Exposure(patient);
+		e1.setDateTime(d);
+		
+		Exposure e2=new Exposure(patient);
+		e2.setDateTime(d);
+		assertTrue(e2.equals(e1));
+		
+	}
+	@Test
+	void testEqualsObject8() {
+		LocalDateTime d= LocalDateTime.now();
+		UUID patient= UUID.randomUUID();
+		Exposure e1=new Exposure(null);
+		
+		Exposure e2=new Exposure(patient);
+		assertFalse(e1.equals(e2));
+		
+	}
+	@Test
+	void testEqualsObject9() {
+		LocalDateTime d= LocalDateTime.now();
+		UUID patient= UUID.randomUUID();
+		Exposure e1=new Exposure(null);
+		
+		Exposure e2=new Exposure(null);
+		assertTrue(e1.equals(e2));
+		
+	}
+	@Test
+	void testEqualsObject10() throws InterruptedException {
+		LocalDateTime d= LocalDateTime.now();
+		UUID patient= UUID.randomUUID();
+		Exposure e1=new Exposure(patient);
+		Thread.sleep(1000);
+		UUID patient2= UUID.randomUUID();
+		Exposure e2=new Exposure(patient2);
+		assertFalse(e1.equals(e2));
+		
+	}
+	@Test
+	void testToString() {
+		LocalDateTime dateTime= LocalDateTime.now();
+		UUID patientld= UUID.randomUUID();
+		String exposureType ="D";
+		Exposure e1=new Exposure(patientld);
+		e1.setExposureType(exposureType);
+		assertTrue(("patientId=" + patientld + " "+ "dateTime=" 
+		+ dateTime + " " + "exposureType=" + exposureType).equals(e1.toString()));
+		
+		
+	}
 
-    @Test
-    public void testToString() {
-        LocalDateTime dateTime = LocalDateTime.of(2023, 8, 19, 10, 0);
-        String exposureType = "I";
-
-        Exposure exposure = new Exposure(dateTime, exposureType);
-        exposure.patientId = UUID.randomUUID();
-
-        String expected = "patientId=" + exposure.patientId + " " + "dateTime=" + dateTime + " " + "exposureType=" + exposureType;
-        assertEquals(expected, exposure.toString());
-    }
 }
